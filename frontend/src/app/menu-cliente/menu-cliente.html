@@ -1,0 +1,93 @@
+<nav class="navbar">
+  <div class="logo">☕ Cafetería Universitaria</div>
+  <div style="display: flex; gap: 15px; align-items: center;">
+    
+    <!-- ESTO ES CLAVE: Solo muestra el botón de la cocina si es 'cocinero' -->
+    <a href="/cocina" *ngIf="authService.isStaff()" class="btn-cocina">Ir a la Cocina 👨‍🍳</a>
+    
+    <a href="/seguimiento" class="btn-cocina" style="background-color: #3498db;">Ver mi Pedido 🔍</a>
+    <button (click)="logout()" style="background-color: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600;">Cerrar Sesión</button>
+  </div>
+</nav>
+
+<div class="contenedor-principal">
+  <div class="menu-seccion">
+    <h1 class="titulo-menu">Nuestro Menú</h1>
+    <p class="subtitulo">Selecciona tus productos favoritos y agrégalos al carrito.</p>
+    
+    <div class="grid-productos">
+      <div *ngFor="let prod of productos()" class="tarjeta-producto">
+        <div class="imagen-producto">
+          <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=300&auto=format&fit=crop" alt="producto">
+        </div>
+        
+        <div class="info-producto">
+          <h3>{{ prod.nombre }}</h3>
+          <p class="descripcion">{{ prod.descripcion || 'Delicioso producto preparado al momento.' }}</p>
+          <p class="precio">${{ prod.precio_base }}</p>
+          
+          <div *ngIf="prod.variantes.length > 0" class="opciones">
+            <label>Tamaño:</label>
+            <select [(ngModel)]="variantesSeleccionadas[prod.id]">
+              <option [ngValue]="null">Normal</option>
+              <option *ngFor="let v of prod.variantes" [ngValue]="v.id">
+                {{ v.nombre }} (+${{ v.precio_extra }})
+              </option>
+            </select>
+          </div>
+
+          <div *ngIf="prod.personalizaciones.length > 0" class="opciones" style="margin-top: 10px;">
+            <label>Extras / Ingredientes:</label>
+            <div *ngFor="let pers of prod.personalizaciones" style="display: flex; align-items: center; gap: 5px; font-size: 0.9rem;">
+              <input type="checkbox" (change)="togglePersonalizacion(prod.id, pers, $event)">
+              <span>{{ pers.nombre }} (+${{ pers.precio_extra }})</span>
+            </div>
+          </div>
+
+          <button (click)="agregarAlCarrito(prod)" class="btn-agregar" style="margin-top: 15px;">
+            + Agregar al Carrito
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="carrito-seccion">
+    <div class="carrito-header">
+      <h2>🛒 Tu Pedido</h2>
+    </div>
+    
+    <div *ngIf="carritoService.items().length === 0" class="carrito-vacio">
+      <p>Tu carrito está vacío.</p>
+    </div>
+    
+    <ul class="lista-carrito">
+      <li *ngFor="let item of carritoService.items(); let i = index">
+        <div class="item-info">
+          <span class="item-cantidad">{{ item.cantidad }}x</span>
+          <div>
+            <strong>{{ item.producto.nombre }}</strong>
+            <span *ngIf="item.variante" class="item-variante">({{ item.variante.nombre }})</span>
+            <span *ngIf="item.personalizaciones?.length > 0" class="item-variante" style="color: #D84315; display: block;">
+              Sin: {{ obtenerNombresPersonalizaciones(item) }}
+            </span>
+          </div>
+        </div>
+        <div class="item-acciones">
+          <span class="item-precio">${{ item.precioUnitario * item.cantidad }}</span>
+          <button (click)="carritoService.eliminarProducto(i)" class="btn-eliminar">✕</button>
+        </div>
+      </li>
+    </ul>
+
+    <div *ngIf="carritoService.items().length > 0" class="carrito-footer">
+      <div class="total-row">
+        <span>Total:</span>
+        <span class="total-precio">${{ carritoService.total() }}</span>
+      </div>
+      <button class="btn-confirmar" (click)="confirmarPedido()">
+        Confirmar Pedido
+      </button>
+    </div>
+  </div>
+</div>

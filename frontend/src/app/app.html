@@ -1,0 +1,57 @@
+<div class="contenedor-principal">
+  <!-- SECCIÓN DEL MENÚ -->
+  <div class="menu-seccion">
+    <h1>Menú de la Cafetería</h1>
+    
+    <div class="grid-productos">
+      <div *ngFor="let prod of productos()" class="tarjeta-producto">
+        <h3>{{ prod.nombre }}</h3>
+        <p>{{ prod.descripcion }}</p>
+        <p class="precio">Base: ${{ prod.precio_base }}</p>
+        
+        <!-- Si el producto tiene variantes, mostramos un select -->
+        <div *ngIf="prod.variantes.length > 0" class="opciones">
+          <label>Elige tamaño/variante:</label>
+          <select [(ngModel)]="variantesSeleccionadas[prod.id]">
+            <option [ngValue]="null">-- Selecciona --</option>
+            <option *ngFor="let v of prod.variantes" [ngValue]="v.id">
+              {{ v.nombre }} (+${{ v.precio_extra }})
+            </option>
+          </select>
+        </div>
+
+        <button (click)="agregarAlCarrito(prod)" class="btn-agregar">Agregar al Carrito</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN DEL CARRITO -->
+  <div class="carrito-seccion">
+    <h2>Tu Carrito</h2>
+    <div *ngIf="carritoService.items().length === 0">
+      <p>El carrito está vacío.</p>
+    </div>
+    
+    <ul class="lista-carrito">
+      <li *ngFor="let item of carritoService.items(); let i = index">
+        <div>
+          <strong>{{ item.cantidad }}x {{ item.producto.nombre }}</strong>
+          <span *ngIf="item.variante" style="font-size: 0.8em; color: gray;">({{ item.variante.nombre }})</span>
+        </div>
+        <div>
+          <span>${{ item.precioUnitario * item.cantidad }}</span>
+          <button (click)="carritoService.eliminarProducto(i)" style="color: red; background: none; border: none; cursor: pointer; font-weight: bold; margin-left: 10px;">X</button>
+        </div>
+      </li>
+    </ul>
+
+    <h3 *ngIf="carritoService.items().length > 0" class="total">
+      Total a pagar: ${{ carritoService.total() }}
+    </h3>
+    
+    <!-- BOTÓN CONECTADO A LA FUNCIÓN confirmarPedido() -->
+    <button *ngIf="carritoService.items().length > 0" class="btn-confirmar" (click)="confirmarPedido()">
+      Confirmar Pedido
+    </button>
+  </div>
+</div>

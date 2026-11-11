@@ -1,0 +1,89 @@
+.seguimiento-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+}
+
+.buscador {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.buscador input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1.1rem;
+}
+
+.buscador button {
+  padding: 10px 20px;
+  background-color: #3E2723;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.estado-pedido {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  margin-top: 20px;
+}
+
+.barra-progreso {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  position: relative;
+}
+
+.paso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+
+.paso.activo { opacity: 1; }
+
+.circulo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.paso.activo .circulo { background: #2E7D32; }
+
+.linea {
+  flex: 1;
+  height: 4px;
+  background: #ddd;
+  margin: 0 10px;
+  margin-bottom: 25px;
+  transition: background 0.3s;
+}
+
+.linea.activa { background: #2E7D32; }
+
+.no-encontrado {
+  color: #e74c3c;
+  margin-top: 20px;
+}

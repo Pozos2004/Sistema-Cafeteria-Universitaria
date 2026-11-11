@@ -1,0 +1,41 @@
+<nav style="background-color: #2c3e50; color: white; display: flex; justify-content: space-between; padding: 15px 40px; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; box-sizing: border-box;">
+  <div style="font-size: 1.5rem; font-weight: 700;">👨‍🍳 Pantalla de Cocina</div>
+  <div style="display: flex; gap: 15px; align-items: center;">
+    <a href="/" style="background-color: #3498db; color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: 600;">Volver al Menú 🍔</a>
+    <button (click)="logout()" style="background-color: #e74c3c; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600;">Cerrar Sesión</button>
+  </div>
+</nav>
+
+<div class="kds-container">
+  <div *ngIf="pedidos().length === 0" class="vacio">
+    <h2>No hay pedidos pendientes</h2>
+    <p>Los nuevos pedidos aparecerán aquí automáticamente.</p>
+  </div>
+
+  <div class="grid-pedidos">
+    <div *ngFor="let pedido of pedidos()" class="tarjeta-pedido" [ngClass]="pedido.estado">
+      <div class="cabecera-pedido">
+        <h2>{{ pedido.folio }}</h2>
+        <span class="badge">{{ pedido.estado }}</span>
+      </div>
+      
+      <ul class="lista-detalles">
+        <li *ngFor="let det of pedido.detalles">
+          <strong>{{ det.cantidad }}x</strong> {{ det.producto_nombre }}
+        </li>
+      </ul>
+
+      <div class="acciones">
+        <button *ngIf="pedido.estado === 'RECIBIDO'" (click)="cambiarEstado(pedido, 'PREPARANDO')" class="btn-preparar">
+          Empezar a Preparar
+        </button>
+        <button *ngIf="pedido.estado === 'PREPARANDO'" (click)="cambiarEstado(pedido, 'LISTO')" class="btn-listo">
+          Marcar como Listo
+        </button>
+        <button *ngIf="pedido.estado === 'LISTO'" (click)="cambiarEstado(pedido, 'ENTREGADO')" class="btn-entregar">
+          Entregar al Cliente
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

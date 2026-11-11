@@ -1,0 +1,42 @@
+<div class="seguimiento-container">
+  <h1>🔍 Seguimiento de Pedido</h1>
+  
+  <div class="buscador">
+    <input type="text" [(ngModel)]="folio" placeholder="Ej. PED-0001" (keyup.enter)="buscarPedido()" style="text-transform: uppercase;">
+    <button (click)="buscarPedido()">Buscar</button>
+  </div>
+
+  <div *ngIf="pedido" class="estado-pedido">
+    <h2>Pedido: {{ pedido.folio }}</h2>
+    <p>Total: ${{ pedido.total }}</p>
+    
+    <div class="barra-progreso">
+      <div class="paso" [class.activo]="pedido.estado === 'RECIBIDO' || pedido.estado === 'PREPARANDO' || pedido.estado === 'LISTO' || pedido.estado === 'ENTREGADO'">
+        <div class="circulo">1</div>
+        <span>Recibido</span>
+      </div>
+      <div class="linea" [class.activa]="pedido.estado === 'PREPARANDO' || pedido.estado === 'LISTO' || pedido.estado === 'ENTREGADO'"></div>
+      
+      <div class="paso" [class.activo]="pedido.estado === 'PREPARANDO' || pedido.estado === 'LISTO' || pedido.estado === 'ENTREGADO'">
+        <div class="circulo">2</div>
+        <span>Preparando</span>
+      </div>
+      <div class="linea" [class.activa]="pedido.estado === 'LISTO' || pedido.estado === 'ENTREGADO'"></div>
+      
+      <div class="paso" [class.activo]="pedido.estado === 'LISTO' || pedido.estado === 'ENTREGADO'">
+        <div class="circulo">3</div>
+        <span>Listo</span>
+      </div>
+      <div class="linea" [class.activa]="pedido.estado === 'ENTREGADO'"></div>
+      
+      <div class="paso" [class.activo]="pedido.estado === 'ENTREGADO'">
+        <div class="circulo">4</div>
+        <span>Entregado</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!pedido && folio" class="no-encontrado">
+    <p>No se encontró el pedido con folio {{ folio }}. Verifica el número.</p>
+  </div>
+</div>
